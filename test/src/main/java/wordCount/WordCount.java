@@ -31,7 +31,7 @@ public class WordCount {
                 rdd.flatMap(line -> Arrays.asList(line.split(" ")).iterator());
         JavaPairRDD<String, Integer> counts = words.mapToPair((w) -> new Tuple2<String, Integer>(w, 1))
                 .reduceByKey((c1, c2) -> c1 + c2);
-        counts.saveAsTextFile("D:\\count.txt");
+        counts.saveAsTextFile("D:\\sparkResult");
 
     }
 }

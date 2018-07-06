@@ -28,6 +28,6 @@ public class KeyValuePairs {
 //        bring back to driver node
         List<Tuple2<String, Integer>> collect = sortedMap.collect();
         collect.forEach(a -> System.out.println(a));
-        sortedMap.saveAsTextFile("D:\\result");
+        sortedMap.saveAsTextFile("D:\\sparkResult");
     }
 }
