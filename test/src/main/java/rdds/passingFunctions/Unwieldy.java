@@ -1,4 +1,4 @@
-package passingFunctions;
+package rdds.passingFunctions;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;

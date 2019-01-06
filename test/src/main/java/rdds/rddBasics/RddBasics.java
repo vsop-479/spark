@@ -1,4 +1,4 @@
-package rddBasics;
+package rdds.rddBasics;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;

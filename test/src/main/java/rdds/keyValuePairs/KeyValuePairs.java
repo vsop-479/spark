@@ -1,4 +1,4 @@
-package keyValuePairs;
+package rdds.keyValuePairs;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -13,7 +13,7 @@ public class KeyValuePairs {
     public static void main(String[] args) {
 //        D:/hadoop/bin/winutils.exe
         System.setProperty("hadoop.home.dir", "D:\\hadoop");
-        SparkConf sparkConf = new SparkConf().setMaster("local").setAppName("wordCount");
+        SparkConf sparkConf = new SparkConf().setMaster("local").setAppName("rdds/wordCount");
         JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
 //        数据集，划分成行集合lines
         JavaRDD<String> rdd = sparkContext.textFile("D:\\escluster.txt");

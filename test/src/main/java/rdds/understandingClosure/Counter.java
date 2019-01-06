@@ -1,4 +1,4 @@
-package understandingClosure;
+package rdds.understandingClosure;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -18,7 +18,7 @@ public class Counter {
         int counter = 0;
         JavaRDD<Integer> rdd = sparkContext.parallelize(data);
         // Wrong: Don't do this!!
-//        rdd.foreach(x -> counter += x);
+//        rdds.rdd.foreach(x -> counter += x);
 
 //       writing to the executor’s stdout not the driver's.
         rdd.foreach(a -> System.out.println(a));
