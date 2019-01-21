@@ -1,7 +1,6 @@
 package streaming.tcpDStream;
 
 import org.apache.spark.SparkConf;
-import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
@@ -16,6 +15,8 @@ import java.util.Arrays;
  */
 public class TcpDStream {
     public static void main(String[] args){
+        //        D:/hadoop/bin/winutils.exe
+        System.setProperty("hadoop.home.dir", "D:\\hadoop");
 //        local[2]:local:a local StreamingContext , 2:two working thread.
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("NetworkWordCount");
 //        1:batch interval of 1 second.
@@ -23,7 +24,11 @@ public class TcpDStream {
 
 //Create a DStream that will connect to hostname:port, like localhost:9999.
 //        lines:the stream of data that will be received from the data server.
-        JavaReceiverInputDStream<String> lines = jssc.socketTextStream("localhost", 9999);
+        String host = "localhost";
+//        host = "10.95.134.109";
+        JavaReceiverInputDStream<String> lines = jssc.socketTextStream(host, 9999);
+        System.out.println("lines============");
+        lines.print();
 //Split each line into words.
         JavaDStream<String> words = lines.flatMap(line -> Arrays.asList(line.split(" ")).iterator());
 //pair:(word, 1).
