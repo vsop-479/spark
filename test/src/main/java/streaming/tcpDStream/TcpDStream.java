@@ -36,12 +36,6 @@ public class TcpDStream {
         JavaDStream<String> words = lines.flatMap(line -> Arrays.asList(line.split(" ")).iterator());
 //pair:(word, 1).
         JavaPairDStream<String, Integer> wordPairs = words.mapToPair((word) -> new Tuple2<>(word, 1));
-        Function2<List<Integer>, Optional<Integer>, Optional<Integer>> updateFunction =
-                (values, state) -> {
-                    Integer newSum = values.get(0) + 1;  // add the new values with the previous running count to get the new count
-                    return Optional.of(newSum);
-        };
-        wordPairs.updateStateByKey(updateFunction);
 //        reduce: v1 + v2.
         JavaPairDStream<String, Integer> wordCounts = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
 //        Print the first ten elements of each RDD generated in this DStream to the console
