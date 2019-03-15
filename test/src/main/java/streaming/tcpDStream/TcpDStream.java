@@ -31,10 +31,9 @@ public class TcpDStream {
 //pair:(word, 1).
         JavaPairDStream<String, Integer> wordPairs = words.mapToPair((word) -> new Tuple2<>(word, 1));
 //        reduce: v1 + v2.
-        JavaPairDStream<String, Integer> wordCount = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
+        JavaPairDStream<String, Integer> wordCounts = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
 //        Print the first ten elements of each RDD generated in this DStream to the console
-        wordCount.print();
-
+        wordCounts.print();
 // Start the computation.
         streamingContext.start();
         try {
