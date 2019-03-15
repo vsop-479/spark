@@ -1,17 +1,13 @@
 package streaming.tcpDStream;
 
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.Optional;
-import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import scala.Tuple2;
-
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by zhouhui on 2019/1/6.
@@ -30,16 +26,14 @@ public class TcpDStream {
         String host = "localhost";
 //        host = "10.95.134.109";
         JavaReceiverInputDStream<String> lines = streamingContext.socketTextStream(host, 9999);
-        System.out.println("lines============");
-        lines.print();
 //Split each line into words.
         JavaDStream<String> words = lines.flatMap(line -> Arrays.asList(line.split(" ")).iterator());
 //pair:(word, 1).
         JavaPairDStream<String, Integer> wordPairs = words.mapToPair((word) -> new Tuple2<>(word, 1));
 //        reduce: v1 + v2.
-        JavaPairDStream<String, Integer> wordCounts = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
+        JavaPairDStream<String, Integer> wordCount = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
 //        Print the first ten elements of each RDD generated in this DStream to the console
-        wordCounts.print();
+        wordCount.print();
 
 // Start the computation.
         streamingContext.start();
