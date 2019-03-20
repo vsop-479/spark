@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 public class StatefulNetworkWordCount {
     private static final Pattern SPACE = Pattern.compile(" ");
+
     public static void main(String[] args){
         //        D:/hadoop/bin/winutils.exe
         System.setProperty("hadoop.home.dir", "D:\\hadoop");
