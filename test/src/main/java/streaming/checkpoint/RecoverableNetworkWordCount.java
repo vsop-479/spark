@@ -38,6 +38,7 @@ public class RecoverableNetworkWordCount {
         JavaDStream<String> words = lines.flatMap(line -> Arrays.asList(SPACE.split(line)).iterator());
         JavaPairDStream<String, Integer> wordPairs = words.mapToPair(word -> new Tuple2<>(word, 1));
         JavaPairDStream<String, Integer> wordCounts = wordPairs.reduceByKey((v1, v2) -> v1 + v2);
+        wordCounts.checkpoint(Durations.seconds(10));
 
         wordCounts.foreachRDD((rdd, time) -> {
             Broadcast<List<String>> blacklist = JavaWordBlackList.getInstance(new JavaSparkContext(rdd.context()));
