@@ -6,22 +6,25 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
-import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
-import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.transport.TransportClient;
 import streaming.toES.User;
 import java.util.*;
 
 public class KafkaConsumer {
     public static void main(String[] args){
         System.setProperty("hadoop.home.dir", "D:\\hadoop");
+        System.setProperty("es.set.netty.runtime.available.processors", "false");
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("SendRecord");
         conf.set("spark.streaming.backpressure.enabled", "true");
         conf.set("spark.streaming.receiver.maxRate", "1000");
@@ -52,8 +55,30 @@ public class KafkaConsumer {
                 return gson.fromJson(record.value(), User.class);
             }
         });
-        kafkaDStream.foreachRDD(rdd ->{
-            JavaEsSpark.saveToEs(rdd, "users/info");
+
+        kafkaDStream.foreachRDD(new VoidFunction<JavaRDD<User>>() {
+            @Override
+            public void call(JavaRDD<User> userJavaRDD) throws Exception {
+                userJavaRDD.foreachPartition(new VoidFunction<Iterator<User>>() {
+                    @Override
+                    public void call(Iterator<User> userIterator) throws Exception {
+                        TransportClient client = ESClient.getClient();
+                        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
+                        Map<String, Object> map = new HashMap<>();
+                        while(userIterator.hasNext()){
+                            User user = userIterator.next();
+                            map.put("name", user.getName());
+                            map.put("age", user.getAge());
+                            map.put("desc", user.getDescription());
+                            IndexRequest request = client.prepareIndex("users", "info").setSource(map).request();
+                            bulkRequestBuilder.add(request);
+                        }
+                        if(bulkRequestBuilder.numberOfActions() > 0){
+                            BulkResponse bulkItemResponses = bulkRequestBuilder.execute().actionGet();
+                        }
+                    }
+                });
+            }
         });
         ssc.start();
 
