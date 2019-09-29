@@ -45,9 +45,6 @@ public class KafkaConsumer {
         JavaInputDStream<ConsumerRecord<String, String>> stream = KafkaUtils.createDirectStream
                 (ssc, LocationStrategies.PreferConsistent(), ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams));
 
-//        JavaPairDStream<String, String> kafkaDStream = stream.mapToPair(record -> new Tuple2<>(record.key(), record.value()));
-//        JavaDStream<String> kafkaDStream = stream.map(record -> record.value());
-
         JavaDStream<User> kafkaDStream = stream.map(new Function<ConsumerRecord<String, String>, User>() {
             @Override
             public User call(ConsumerRecord<String, String> record) throws Exception {
