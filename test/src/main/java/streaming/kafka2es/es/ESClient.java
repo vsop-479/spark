@@ -1,4 +1,4 @@
-package streaming.fromKafka;
+package streaming.kafka2es.es;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;

@@ -1,4 +1,4 @@
-package streaming.toES;
+package streaming.kafka2es.po;
 
 public class User {
     private String name;

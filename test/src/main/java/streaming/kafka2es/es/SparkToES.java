@@ -1,11 +1,13 @@
-package streaming.toES;
+package streaming.kafka2es.es;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.elasticsearch.spark.rdd.api.java.JavaEsSpark;
+import streaming.kafka2es.po.User;
 
+//es-hadoop容易与scala版本冲突
 public class SparkToES {
     public static void main(String[] args) throws InterruptedException {
         //        D:/hadoop/bin/winutils.exe
