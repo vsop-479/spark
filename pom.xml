@@ -14,7 +14,7 @@
 
     <properties>
         <spark.version>2.4.3</spark.version>
-        <es.version>6.8.3</es.version>
+        <es.version>6.8.17</es.version>
     </properties>
 
     <dependencies>
