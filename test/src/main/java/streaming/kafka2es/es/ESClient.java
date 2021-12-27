@@ -23,7 +23,7 @@ public class ESClient {
                         .put("client.transport.nodes_sampler_interval", "60s")
                         .build();
                 client = new PreBuiltTransportClient(setting);
-                client.addTransportAddress(new TransportAddress(new InetSocketAddress("10.74.17.26",9300)));
+                client.addTransportAddress(new TransportAddress(new InetSocketAddress("localhost rdma",9300)));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
